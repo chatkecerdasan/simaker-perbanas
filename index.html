@@ -1299,8 +1299,8 @@ body.dark-mode code{color:#5a9de8;background:rgba(58,123,213,.1);padding:2px 6px
 const ADMIN_PIN = 'admin2026';
 let ACTIVE_YEAR = parseInt(localStorage.getItem('simaker_active_year') || '2026');
 const BUILTIN_YEAR_CONFIG = {
-  2025: { xlsx: 'SIMAKER_2025.xlsx', lsKey: 'simaker2025_v3', loginKey: 'simaker2025_login' },
-  2026: { xlsx: 'SIMAKER_2026_FINAL.xlsx', lsKey: 'simaker2026_v3', loginKey: 'simaker2026_login' }
+  2025: { xlsx: 'SIMAKER_2025.xlsx', lsKey: 'simaker2025_v3', loginKey: 'simaker2025_login', stateJson: 'simaker-data-2025.json' },
+  2026: { xlsx: 'SIMAKER_2026_FINAL.xlsx', lsKey: 'simaker2026_v3', loginKey: 'simaker2026_login', stateJson: 'simaker-data.json' }
 };
 // Embedded snapshots — used as fallback when XLSX not available
 const EXCEL_SNAPSHOTS = {
@@ -1347,6 +1347,10 @@ function switchYear(year) {
   // Reload STATE for active year from localStorage
   try { Object.keys(STATE).forEach(k => delete STATE[k]); Object.assign(STATE, loadState()); } catch(e) {}
   refreshAllViews();
+  // Auto-load realisasi JSON dari repo untuk tahun yang baru aktif (fire-and-forget)
+  tryAutoLoadStateJSON().then(loaded => {
+    if (loaded) { refreshAllViews(); showToast('✓ Data realisasi '+ACTIVE_YEAR+' tersinkronisasi dari server.'); }
+  });
   // Try to load fresh XLSX in background
   const cfg = getActiveYearCfg();
   fetch(cfg.xlsx).then(r=>{ if(!r.ok) throw new Error(); return r.arrayBuffer(); })
@@ -1830,6 +1834,30 @@ async function tryAutoLoadWorkbook() {
       ? 'Browser membuka file langsung dari folder lokal, jadi auto-load XLSX bisa diblokir. Gunakan tombol "Muat Workbook XLSX" atau jalankan launcher server lokal.'
       : 'Auto-load workbook belum berhasil. Anda tetap bisa memuat file lewat tombol "Muat Workbook XLSX".', true);
     return false;
+  }
+}
+
+// Auto-load realisasi JSON dari repo (Opsi B: GitHub = source of truth, always overwrite)
+// Dipanggil di DOMContentLoaded & switchYear. Silent fail kalau offline / file mode / 404 / JSON kosong.
+async function tryAutoLoadStateJSON() {
+  try {
+    const cfg = getActiveYearCfg();
+    if (!cfg.stateJson) return false;
+    const res = await fetch(cfg.stateJson, { cache: 'no-cache' });
+    if (!res.ok) return false;
+    const parsed = await res.json();
+    // Validasi shape: {realisasi: {sheetCode: {noIKU: nilai}}, ...}
+    if (!parsed || typeof parsed.realisasi !== 'object' || Array.isArray(parsed.realisasi)) return false;
+    // Safety guard: skip kalau JSON kosong (tidak overwrite localStorage user dengan {})
+    if (Object.keys(parsed.realisasi).length === 0) return false;
+    // Opsi B: always overwrite localStorage + STATE in-memory
+    const lsKey = getActiveLS_KEY();
+    localStorage.setItem(lsKey, JSON.stringify(parsed.realisasi));
+    Object.keys(STATE).forEach(k => delete STATE[k]);
+    Object.assign(STATE, parsed.realisasi);
+    return true;
+  } catch (err) {
+    return false; // silent — bukan error fatal
   }
 }
 
@@ -3420,11 +3448,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2026 is active — reload STATE for 2026
     try { Object.assign(STATE, loadState()); } catch(e) {}
   }
+  // Auto-load realisasi terbaru dari repo (Opsi B). Silent fail kalau offline.
+  // Dijalankan SEBELUM refreshAllViews supaya first render langsung pakai data terbaru.
+  const stateLoaded = await tryAutoLoadStateJSON();
   applyUnitFilters();
   updateSessionChip();
   updateAdminNav();
   renderYearSwitcher();
   refreshAllViews();
+  if (stateLoaded) showToast('✓ Data realisasi tersinkronisasi dari server.');
   initDarkMode();
   populateCompareSelects();
   setTimeout(updateNotifBadge, 800);
