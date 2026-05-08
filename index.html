@@ -91,7 +91,16 @@ h1,h2,h3,h4,.page-title,.logo-text,.metric-val,.score-display{font-family:'Monts
   border-right:1px solid var(--line);
   display:flex;flex-direction:column;z-index:100;
   box-shadow:18px 0 50px rgba(13,77,139,.06);
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:rgba(13,77,139,.18) transparent;
 }
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(13,77,139,.18);border-radius:3px}
+.sidebar::-webkit-scrollbar-thumb:hover{background:rgba(13,77,139,.32)}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+body.dark-mode .sidebar{scrollbar-color:rgba(90,157,232,.20) transparent}
+body.dark-mode .sidebar::-webkit-scrollbar-thumb{background:rgba(90,157,232,.20)}
+body.dark-mode .sidebar::-webkit-scrollbar-thumb:hover{background:rgba(90,157,232,.36)}
 .sidebar-logo{
   padding:22px 22px 18px;
   border-bottom:1px solid var(--line);
@@ -331,6 +340,9 @@ h1,h2,h3,h4,.page-title,.logo-text,.metric-val,.score-display{font-family:'Monts
 /* Child rows (indented under warek group) */
 .tbl tr.child-indent-row td:first-child{padding-left:24px;color:var(--muted)}
 .tbl tr.child-indent-row:hover td{background:rgba(0,0,0,.02)}
+.tbl tr.row-clickable{cursor:pointer;transition:background .15s}
+.tbl tr.row-clickable:hover td{background:rgba(13,77,139,.08)}
+body.dark-mode .tbl tr.row-clickable:hover td{background:rgba(58,123,213,.12)}
 .form-input,.realisasi-inp{
   background:#fff;border:1px solid var(--line-strong);border-radius:14px;color:var(--ink);
   padding:10px 13px;font-size:14px;width:100%;transition:border-color .15s, box-shadow .15s;
@@ -429,17 +441,21 @@ body.dark-mode .admin-table td{border-bottom-color:rgba(48,69,85,.6)}
 .heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
 .heatmap-cell{border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s}
 .heatmap-cell:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.15)}
-.heatmap-cell .hm-name{font-size:11px;font-weight:700;line-height:1.3;margin-bottom:6px;color:#fff}
-.heatmap-cell .hm-score{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;color:#fff}
-.heatmap-cell .hm-label{font-size:10px;color:rgba(255,255,255,.8);margin-top:2px}
+.heatmap-cell .hm-name{font-size:11px;font-weight:700;line-height:1.3;margin-bottom:6px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.heatmap-cell .hm-score{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.heatmap-cell .hm-label{font-size:10px;color:rgba(255,255,255,.92);margin-top:2px;text-shadow:0 1px 2px rgba(0,0,0,.30)}
+.heatmap-legend-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:12px;font-weight:600;color:#fff;
+  padding:4px 12px;border-radius:999px;
+  text-shadow:0 1px 2px rgba(0,0,0,.30);
+  letter-spacing:.01em;
+}
 .heatmap-melampaui{background:linear-gradient(135deg,#0d4d8b,#1a6aaa)}
-.heatmap-baik{background:linear-gradient(135deg,#00a47b,#00c896)}
-.heatmap-cukup{background:linear-gradient(135deg,#c87a10,#e8a020)}
-.heatmap-kurang{background:linear-gradient(135deg,#cf5d4b,#e07060)}
+.heatmap-baik{background:linear-gradient(135deg,#008a68,#00a47b)}
+.heatmap-cukup{background:linear-gradient(135deg,#a05808,#c87a10)}
+.heatmap-kurang{background:linear-gradient(135deg,#b34d3d,#cf5d4b)}
 .heatmap-nodata{background:linear-gradient(135deg,#6f8597,#90a0b0)}
-
-/* ── TREND CHART ── */
-.trend-select-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 
 /* ── NOTIF ── */
 .notif-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#cf5d4b;color:#fff;font-size:10px;font-weight:800;margin-left:4px}
@@ -711,10 +727,6 @@ body.dark-mode code{color:#5a9de8;background:rgba(58,123,213,.1);padding:2px 6px
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h3v3H4V5zm6 0h3v3h-3V5zm6 0h3v3h-3V5zM4 11h3v3H4v-3zm6 0h3v3h-3v-3zm6 0h3v3h-3v-3zM4 17h3v3H4v-3zm6 0h3v3h-3v-3zm6 0h3v3h-3v-3z"/></svg>
     Heatmap Kinerja
   </div>
-  <div class="nav-item" id="nav-trend" onclick="goTo('trend')">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4v16"/></svg>
-    Tren Bulanan
-  </div>
   <div class="nav-item" id="nav-compare" onclick="goTo('compare')">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
     Perbandingan Tahun
@@ -881,7 +893,7 @@ body.dark-mode code{color:#5a9de8;background:rgba(58,123,213,.1);padding:2px 6px
         <thead><tr>
           <th style="width:50px">No</th>
           <th>Biro / Fakultas / Direktorat</th>
-          <th>Sub-Unit / Program Studi</th>
+          <th style="width:200px">Progres Isian</th>
           <th class="r" style="width:110px">Kinerja (%)</th>
           <th class="c" style="width:90px">Status</th>
         </tr></thead>
@@ -889,6 +901,12 @@ body.dark-mode code{color:#5a9de8;background:rgba(58,123,213,.1);padding:2px 6px
       </table>
     </div>
     <div style="font-size:11px;color:var(--muted);margin-top:10px">Warna status: &gt;100 Melampaui &nbsp;|&nbsp; 80-100 Baik &nbsp;|&nbsp; 60-79 Cukup &nbsp;|&nbsp; &lt;60 Kurang &nbsp;|&nbsp; Kinerja = rata-rata tertimbang IKU yang telah diisi</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px">
+      Progres isian: <span style="color:#ef4444">&lt;60% kurang</span> ·
+      <span style="color:#f59e0b">60–79% sebagian</span> ·
+      <span style="color:#10b981">80–99% hampir lengkap</span> ·
+      <span style="color:#3b82f6">100% lengkap</span>
+    </div>
   </div>
 </div>
 
@@ -1099,42 +1117,13 @@ body.dark-mode code{color:#5a9de8;background:rgba(58,123,213,.1);padding:2px 6px
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
       <div style="font-size:14px;font-weight:700;color:var(--ink)">Semua Unit Kerja</div>
       <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#fff;background:#0d4d8b;padding:4px 10px;border-radius:999px">■ Melampaui</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#fff;background:#00a47b;padding:4px 10px;border-radius:999px">■ Baik</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#fff;background:#c87a10;padding:4px 10px;border-radius:999px">■ Cukup</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#fff;background:#cf5d4b;padding:4px 10px;border-radius:999px">■ Kurang</span>
+        <span class="heatmap-legend-pill" style="background:#0d4d8b">■ Melampaui</span>
+        <span class="heatmap-legend-pill" style="background:#008a68">■ Baik</span>
+        <span class="heatmap-legend-pill" style="background:#a05808">■ Cukup</span>
+        <span class="heatmap-legend-pill" style="background:#b34d3d">■ Kurang</span>
       </div>
     </div>
     <div class="heatmap-grid" id="heatmapGrid"></div>
-  </div>
-</div>
-
-<!-- ===== TREN BULANAN ===== -->
-<div class="page" id="page-trend">
-  <div class="page-header">
-    <div class="page-title">Tren Kinerja Bulanan</div>
-    <div class="page-sub">Pantau perkembangan realisasi bulanan vs target untuk unit kerja yang dipilih.</div>
-  </div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="trend-select-wrap">
-      <label style="font-size:13px;font-weight:700;color:var(--muted)">Unit Kerja</label>
-      <select class="form-input" id="trendUnitSelect" onchange="onTrendUnitChange()" style="max-width:320px">
-        <option value="">— Pilih Unit Kerja —</option>
-      </select>
-      <label style="font-size:13px;font-weight:700;color:var(--muted);margin-left:12px">IKU</label>
-      <select class="form-input" id="trendIKUSelect" onchange="renderTrendChart()" style="max-width:280px">
-        <option value="">— Pilih IKU —</option>
-      </select>
-    </div>
-    <div id="trendEmpty" style="text-align:center;padding:40px;color:var(--muted)">Pilih unit kerja dan IKU untuk melihat tren bulanan.</div>
-    <div id="trendChartWrap" style="display:none">
-      <div class="chart-wrap" style="height:300px"><canvas id="chartTrend"></canvas></div>
-      <div style="margin-top:16px;padding:14px;background:var(--brand-blue-soft);border-radius:14px;font-size:13px;color:var(--brand-blue-deep)" id="trendSummary"></div>
-    </div>
-  </div>
-  <div class="card">
-    <div style="font-size:14px;font-weight:700;margin-bottom:14px">Input Realisasi Bulanan</div>
-    <div id="trendInputWrap" style="color:var(--muted);font-size:13px">Pilih unit dan IKU di atas, lalu isi realisasi per bulan di sini.</div>
   </div>
 </div>
 
@@ -1354,6 +1343,7 @@ function switchYear(year) {
   } else {
     setDataSourceLabel('Sumber data: belum dimuat');
   }
+  applyUnitFilters();
   // Reload STATE for active year from localStorage
   try { Object.keys(STATE).forEach(k => delete STATE[k]); Object.assign(STATE, loadState()); } catch(e) {}
   refreshAllViews();
@@ -1775,9 +1765,28 @@ function parseWorkbookToExcel(workbook) {
   return {resumeOrdered, unitNames, unitData, skData, invertedIKUs};
 }
 
+// ── Daftar unit yang disembunyikan per tahun (data tetap di sumber, tapi tidak ditampilkan) ──
+// Catatan: SPS (kode 12) sudah tidak ada di 2026 — disaring saat data 2026 dimuat.
+const HIDDEN_UNITS_PER_YEAR = {
+  2026: [12],
+};
+
+// Buang unit dari EXCEL.resumeOrdered & EXCEL.unitData untuk tahun aktif.
+function applyUnitFilters() {
+  const hidden = HIDDEN_UNITS_PER_YEAR[ACTIVE_YEAR];
+  if (!hidden || !hidden.length) return;
+  if (Array.isArray(EXCEL.resumeOrdered)) {
+    EXCEL.resumeOrdered = EXCEL.resumeOrdered.filter(r => !hidden.includes(Number(r.kode)));
+  }
+  if (EXCEL.unitData) {
+    hidden.forEach(k => { delete EXCEL.unitData[String(k)]; });
+  }
+}
+
 function replaceExcelData(newData) {
   Object.keys(EXCEL).forEach(key => delete EXCEL[key]);
   Object.assign(EXCEL, newData);
+  applyUnitFilters();
 }
 
 function refreshAllViews() {
@@ -2086,6 +2095,42 @@ function calcUnitKinerja(kode) {
   return calcKinerja(String(kode), rows).kinerja;
 }
 
+// ── Progres Isian (filled vs total IKU) ──
+// Returns {filled, total, percent} for unit; null if unit has no direct data.
+function calcProgresIsian(kode) {
+  const rows = EXCEL.unitData && EXCEL.unitData[String(kode)];
+  if (!rows || rows.length === 0) return null;
+  const validRows = rows.filter(isValidIKU); // bobot > 0
+  if (validRows.length === 0) return null;
+  const ud = STATE[String(kode)] || {};
+  let filled = 0;
+  validRows.forEach(r => {
+    const v = ud[r.noIKU] !== undefined ? ud[r.noIKU] : r.realisasi;
+    if (v !== null && v !== undefined && v !== '') filled++;
+  });
+  return { filled, total: validRows.length, percent: (filled / validRows.length) * 100 };
+}
+
+// Render small inline progres bar HTML for the dashboard table.
+function renderProgresBar(p) {
+  if (!p) return '–';
+  const pct = p.percent;
+  let color;
+  const bgTrack = 'rgba(0,0,0,.06)';
+  if (pct >= 100)      color = 'linear-gradient(90deg,#10b981,#3b82f6)';
+  else if (pct >= 80)  color = '#10b981';
+  else if (pct >= 60)  color = '#f59e0b';
+  else                 color = '#ef4444';
+  const w = Math.min(pct, 100).toFixed(1);
+  return `
+    <div style="display:flex;align-items:center;gap:8px;min-width:160px">
+      <div style="flex:1;height:6px;background:${bgTrack};border-radius:3px;overflow:hidden">
+        <div style="width:${w}%;height:100%;background:${color};border-radius:3px;transition:width .3s"></div>
+      </div>
+      <span style="font-size:11px;color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap">${p.filled}/${p.total}</span>
+    </div>`;
+}
+
 // Institution score = kinerja of unit 1 (Perbanas Institute)
 // = AVERAGE of all direct sub-groups and standalone units
 // For historical years: use skorKontribusi from resumeOrdered kode=1 if available
@@ -2263,7 +2308,6 @@ function goTo(page) {
   if (page === 'perspektif') renderPerspektif();
   if (page === 'hierarki') renderHierarki();
   if (page === 'heatmap') renderHeatmap();
-  if (page === 'trend') renderTrendPage();
   if (page === 'compare') renderCompare();
   if (page === 'notif') renderNotif();
   if (page === 'admin-iku') { renderAdminTahun(); }
@@ -2321,10 +2365,22 @@ function renderDashboard() {
   function addRow(kode, nama, kinerja, rowClass) {
     const st = statusOf(kinerja);
     const isP = rowClass === 'parent-row' || rowClass === 'warek-group-row';
-    rows.push(`<tr class="${rowClass}">
+    // Tampilkan progres hanya untuk unit yang punya unitData langsung (leaf).
+    // Institusi (kode 1) dan parent agregat (Warek/Fakultas dengan anak) di-set '–'.
+    const hasOwnData = !!(EXCEL.unitData && EXCEL.unitData[String(kode)]);
+    const isParentAggregate = isP && !hasOwnData;
+    const progresCell = (kode === 1 || isParentAggregate)
+      ? '<span style="color:var(--muted)">–</span>'
+      : renderProgresBar(calcProgresIsian(kode));
+    // Leaf clickable → buka Detail Unit Kerja
+    const isClickable = hasOwnData && kode !== 1;
+    const clickAttrs = isClickable
+      ? ` class="${rowClass} row-clickable" title="Lihat detail ${nama}" onclick="openUnitDetail(${kode})"`
+      : ` class="${rowClass}"`;
+    rows.push(`<tr${clickAttrs}>
       <td class="num" style="color:var(--muted)">${kode}</td>
       <td${rowClass==='child-indent-row'?' style="padding-left:32px"':''}>${nama}</td>
-      <td></td>
+      <td>${progresCell}</td>
       <td class="r num" style="color:var(--ink);font-weight:${isP?'700':'500'}">${kinerja>0?fmtID(kinerja):'–'}</td>
       <td class="c">${kinerja>0?`<span class="badge ${st.cls}">${st.label}</span>`:'–'}</td>
     </tr>`);
@@ -2402,10 +2458,18 @@ function populateSelects() {
     // Restore pilihan jika masih valid di tahun baru
     if (prevVal && hasSheets.some(r => String(r.kode) === String(prevVal))) {
       sel.value = prevVal;
+    } else if (hasSheets.length > 0) {
+      // Default: pilih unit pertama agar halaman tidak kosong
+      sel.value = String(hasSheets[0].kode);
     }
   };
-  mkOpts(document.getElementById('selUnit'));
-  mkOpts(document.getElementById('selUnitDetail'));
+  const selInput  = document.getElementById('selUnit');
+  const selDetail = document.getElementById('selUnitDetail');
+  if (selInput)  mkOpts(selInput);
+  if (selDetail) mkOpts(selDetail);
+  // Trigger loader supaya konten terisi
+  if (selInput  && selInput.value)  { try { loadInputForm(); }   catch(e){} }
+  if (selDetail && selDetail.value) { try { loadUnitDetail(); }  catch(e){} }
 }
 
 function loadInputForm() {
@@ -2551,6 +2615,21 @@ function onRealisasiInput(inp) {
     cell.textContent = nilai > 0 ? fmtID(nilai) : '–';
   }
   recalcInputSummary(code);
+  // Refresh dashboard summary table progres bar in real-time (debounced).
+  scheduleDashboardRefresh();
+}
+
+// Debounced dashboard rerender so the "Progres Isian" bars stay in sync
+// while the user is typing in the Input Realisasi page.
+let __dashRefreshTimer = null;
+function scheduleDashboardRefresh() {
+  if (__dashRefreshTimer) clearTimeout(__dashRefreshTimer);
+  __dashRefreshTimer = setTimeout(() => {
+    __dashRefreshTimer = null;
+    try {
+      if (typeof renderDashboard === 'function') renderDashboard();
+    } catch(e) { /* no-op */ }
+  }, 180);
 }
 
 function onRealisasiBlur(inp) {
@@ -2596,6 +2675,18 @@ function resetUnit() {
 // ================================================================
 // UNIT DETAIL
 // ================================================================
+// Open Unit Detail page from anywhere (e.g. dashboard row click).
+function openUnitDetail(kode) {
+  if (kode === undefined || kode === null) return;
+  const sel = document.getElementById('selUnitDetail');
+  if (!sel) return;
+  // Pastikan opsi tersedia di dropdown (kalau tidak, unit tsb. tidak punya data)
+  const has = Array.from(sel.options).some(o => String(o.value) === String(kode));
+  if (!has) { showToast('Unit ini tidak punya data IKU.'); return; }
+  sel.value = String(kode);
+  goTo('unit');
+  loadUnitDetail();
+}
 let udChart = null;
 function loadUnitDetail() {
   const code = document.getElementById('selUnitDetail').value;
@@ -2855,49 +2946,452 @@ function showToast(msg) {
 // ================================================================
 // PDF EXPORT
 // ================================================================
+// ── Helper: warna teks per status (untuk badge & teks progres di PDF) ──
+function pdfStatusColor(label) {
+  switch (label) {
+    case 'Melampaui': return [13, 77, 139];   // brand blue
+    case 'Baik':      return [16, 162, 123];  // green
+    case 'Cukup':     return [212, 165, 74];  // gold
+    case 'Kurang':    return [207, 93, 75];   // red
+    default:          return [110, 110, 110];
+  }
+}
+function pdfStatusBg(label) {
+  switch (label) {
+    case 'Melampaui': return [231, 240, 250];
+    case 'Baik':      return [225, 245, 238];
+    case 'Cukup':     return [251, 240, 215];
+    case 'Kurang':    return [251, 230, 226];
+    default:          return [240, 240, 240];
+  }
+}
+function pdfProgresColor(pct) {
+  if (pct >= 100) return [59, 130, 246];   // blue
+  if (pct >= 80)  return [16, 185, 129];   // green
+  if (pct >= 60)  return [245, 158, 11];   // amber
+  return [239, 68, 68];                    // red
+}
+
+// Convert <img> on the page to a data URL via canvas. Returns null on failure.
+async function imgToDataURL(imgEl) {
+  if (!imgEl) return null;
+  try {
+    if (!imgEl.complete) {
+      await new Promise(res => { imgEl.onload = res; imgEl.onerror = res; });
+    }
+    const c = document.createElement('canvas');
+    c.width  = imgEl.naturalWidth  || imgEl.width  || 200;
+    c.height = imgEl.naturalHeight || imgEl.height || 200;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(imgEl, 0, 0, c.width, c.height);
+    return c.toDataURL('image/png');
+  } catch (e) { return null; }
+}
+
 async function exportPDF() {
   const btn = document.getElementById('btnPDF');
+  const restoreBtn = () => {
+    btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:15px;height:15px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Unduh PDF';
+    btn.disabled = false;
+  };
   btn.innerHTML = 'Memproses…'; btn.disabled = true;
   try {
     const {jsPDF} = window.jspdf;
     const doc = new jsPDF('p','mm','a4');
-    const W=210, M=14; let y=M;
-    const inst = calcInstScore();
+    const W = 210, H = 297, M = 15;
+    const tahun = ACTIVE_YEAR;
+    const todayID = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+    const todayStamp = (() => {
+      const d = new Date();
+      return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+    })();
 
-    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(30,58,138);
-    doc.text('LAPORAN KINERJA SIMAKER ' + ACTIVE_YEAR, M, y); y+=7;
-    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(100);
-    const periodTxt = isLiveYear() ? '  ·  Periode: ' + getPeriodText() + '  ·  Mode: ' + (CALC_MODE==='ytd'?'YTD':'Bulanan') + (REPORT_MONTH !== REAL_CURRENT_MONTH ? '  ·  Cut-off: ' + BULAN_ID[REPORT_MONTH] : '') : '';
-    doc.text('Perbanas Institute  ·  ' + new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) + periodTxt, M, y); y+=5;
-    doc.setDrawColor(59,130,246); doc.setLineWidth(.4); doc.line(M, y, W-M, y); y+=7;
-
-    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(0);
-    doc.text('Kinerja Akumulasi Institusi: ' + fmtID(inst) + ' / 100  (' + statusOf(inst).label + ')', M, y); y+=10;
-
-    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(30,58,138);
-    doc.text('Ringkasan Skor Unit Kerja', M, y); y+=6;
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(100);
-    doc.text('No', M, y); doc.text('Unit / Sub-Unit', M+10, y);
-    doc.text('Kinerja', W-M-20, y); doc.text('Status', W-M-5, y); y+=3;
-    doc.setLineWidth(.2); doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=4;
-
-    doc.setFont('helvetica','normal'); doc.setTextColor(20);
+    // ──────────────────────────────────────────────────────────────
+    // STEP 1: hitung daftar unit yang akan dirender di halaman detail
+    // (skip: tanpa data, 0% terisi, parent agregat).
+    // ──────────────────────────────────────────────────────────────
+    const detailUnits = [];
     EXCEL.resumeOrdered.filter(r => r.kode !== 1).forEach(r => {
-      if (y > 280) { doc.addPage(); y=M; }
-      const kinerja = calcUnitKinerja(r.kode);
-      const name = (r.subUnit || r.biro).substring(0,55);
-      doc.setFontSize(8);
-      doc.text(String(r.kode), M, y);
-      doc.text(name, M+10, y);
-      doc.text(fmtID(kinerja), W-M-20, y);
-      doc.text(statusOf(kinerja).label, W-M-5, y);
-      y+=4;
+      const kode = r.kode;
+      const rows = EXCEL.unitData[String(kode)];
+      if (!rows) return; // skip unit tanpa data
+      const validRows = rows.filter(isValidIKU);
+      if (validRows.length === 0) return;
+      // Skip parent agregat dengan anak
+      const childMap = getParentMap();
+      if (childMap[kode] && childMap[kode].length > 0) return;
+      // Cek progres > 0
+      const p = calcProgresIsian(kode);
+      if (!p || p.filled === 0) return;
+      const nama = r.subUnit || r.biro || ('Unit ' + kode);
+      detailUnits.push({ kode, nama, row: r, validRows, progres: p });
     });
-    doc.save(`SIMAKER_${ACTIVE_YEAR}_Laporan_Kinerja.pdf`);
+
+    // Layout numbering:
+    //   Hal 1 = Cover
+    //   Hal 2 = Daftar Isi
+    //   Hal 3 = Ringkasan Eksekutif
+    //   Hal 4..(3+n) = Detail per unit (setidaknya 1 hal per unit)
+    const TOTAL_DETAIL = detailUnits.length;
+    const PAGE_RINGKASAN = 3;
+    const PAGE_DETAIL_START = 4;
+
+    // ──────────────────────────────────────────────────────────────
+    // HALAMAN 1 — COVER
+    // ──────────────────────────────────────────────────────────────
+    // Header band gradient (gambar manual: 2 rect biru → hijau)
+    doc.setFillColor(13, 77, 139);  doc.rect(0, 0, W, 12, 'F');
+    doc.setFillColor(0, 164, 123);  doc.rect(0, H-12, W, 12, 'F');
+
+    // Logo (coba ambil dari sidebar-logo img; kalau gagal gunakan placeholder teks)
+    const logoImg = document.querySelector('.sidebar-logo img, .brand-mark img, .brand-image');
+    let logoData = null;
+    if (logoImg) logoData = await imgToDataURL(logoImg);
+    if (logoData) {
+      try { doc.addImage(logoData, 'PNG', W/2 - 22, 50, 44, 44); } catch(e) { logoData = null; }
+    }
+    if (!logoData) {
+      // Fallback teks brand
+      doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(13,77,139);
+      doc.text('PERBANAS', W/2, 70, {align:'center'});
+      doc.text('INSTITUTE', W/2, 80, {align:'center'});
+    }
+
+    // Judul utama
+    doc.setFont('helvetica','bold'); doc.setFontSize(26); doc.setTextColor(13,52,95);
+    doc.text('Laporan Kinerja Institusi', W/2, 120, {align:'center'});
+    doc.setFontSize(22); doc.setTextColor(0,164,123);
+    doc.text('SIMAKER ' + tahun, W/2, 134, {align:'center'});
+
+    // Sub-judul
+    doc.setFont('helvetica','normal'); doc.setFontSize(12); doc.setTextColor(70,98,120);
+    let coverY = 152;
+    doc.text('Periode Pelaporan: ' + (getPeriodText() || '—'), W/2, coverY, {align:'center'}); coverY += 7;
+    doc.text('Kerangka: Balanced Scorecard', W/2, coverY, {align:'center'});
+
+    // Box info skor singkat
+    const inst = calcInstScore();
+    const stInst = statusOf(inst);
+    const bg = pdfStatusBg(stInst.label);
+    const fg = pdfStatusColor(stInst.label);
+    doc.setFillColor(...bg);
+    doc.roundedRect(W/2 - 50, 175, 100, 30, 4, 4, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...fg);
+    doc.text('Skor Kinerja Institusi', W/2, 184, {align:'center'});
+    doc.setFontSize(20);
+    doc.text(`${fmtID(inst)} / 100`, W/2, 195, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(10);
+    doc.text(stInst.label.toUpperCase(), W/2, 202, {align:'center'});
+
+    // Footer cover
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(140);
+    doc.text('Dicetak: ' + todayID, W/2, H - 18, {align:'center'});
+
+    // ──────────────────────────────────────────────────────────────
+    // HALAMAN 2 — DAFTAR ISI
+    // ──────────────────────────────────────────────────────────────
+    doc.addPage();
+    let y = M + 8;
+    doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(13,52,95);
+    doc.text('Daftar Isi', M, y); y += 4;
+    doc.setDrawColor(13,77,139); doc.setLineWidth(0.6); doc.line(M, y, W-M, y); y += 9;
+
+    const tocLines = [
+      { label: '1. Ringkasan Eksekutif',   page: PAGE_RINGKASAN, indent: 0 },
+      { label: '2. Detail per Unit Kerja', page: null,           indent: 0 },
+    ];
+    detailUnits.forEach((u, i) => {
+      tocLines.push({
+        label: `${i+1}. ${u.nama}`,
+        page: PAGE_DETAIL_START + i,
+        indent: 8
+      });
+    });
+
+    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(40);
+    tocLines.forEach(item => {
+      const xLabel = M + item.indent;
+      const xPage = W - M;
+      const labelText = item.label;
+      doc.text(labelText, xLabel, y);
+      if (item.page !== null) {
+        const pageText = String(item.page);
+        // Dot leader
+        const labelWidth = doc.getTextWidth(labelText);
+        const pageWidth  = doc.getTextWidth(pageText);
+        const dotStart = xLabel + labelWidth + 2;
+        const dotEnd   = xPage - pageWidth - 2;
+        if (dotEnd > dotStart) {
+          doc.setTextColor(160);
+          let dx = dotStart;
+          while (dx < dotEnd) {
+            doc.text('.', dx, y);
+            dx += 1.6;
+          }
+          doc.setTextColor(40);
+        }
+        doc.text(pageText, xPage, y, {align:'right'});
+      }
+      y += 7;
+      if (y > H - 20) { doc.addPage(); y = M + 8; }
+    });
+
+    // ──────────────────────────────────────────────────────────────
+    // HALAMAN 3 — RINGKASAN EKSEKUTIF
+    // ──────────────────────────────────────────────────────────────
+    doc.addPage();
+    y = M + 8;
+    doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(13,52,95);
+    doc.text('Ringkasan Eksekutif — SIMAKER ' + tahun, M, y); y += 3;
+    doc.setDrawColor(13,77,139); doc.setLineWidth(0.5); doc.line(M, y, W-M, y); y += 9;
+
+    // Box skor institusi
+    const boxBg = pdfStatusBg(stInst.label);
+    const boxFg = pdfStatusColor(stInst.label);
+    doc.setFillColor(...boxBg);
+    doc.roundedRect(M, y, W - 2*M, 22, 3, 3, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...boxFg);
+    doc.text('Skor Kinerja Institusi', M + 5, y + 8);
+    doc.setFontSize(20);
+    doc.text(`${fmtID(inst)} / 100`, M + 5, y + 18);
+    doc.setFontSize(11);
+    doc.text(stInst.label.toUpperCase(), W - M - 5, y + 14, {align:'right'});
+    y += 30;
+
+    // Tabel semua unit
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(13,52,95);
+    doc.text('Skor per Unit Kerja', M, y); y += 6;
+
+    // Header tabel — kolom Status di-right-align ke W-M, lebih luas (~30mm)
+    const colNo   = M;             // 15
+    const colUnit = M + 8;         // 23
+    const colProg = M + 90;        // 105
+    const colSkor = M + 125;       // 140
+    const colStat = M + 150;       // 165 (badge digambar dengan auto-fit width, anchored to right)
+    doc.setFillColor(241,247,251);
+    doc.rect(M, y - 4, W - 2*M, 8, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(70,98,120);
+    doc.text('No',          colNo,   y + 1);
+    doc.text('Unit Kerja',  colUnit, y + 1);
+    doc.text('Progres',     colProg, y + 1);
+    doc.text('Kinerja',     colSkor, y + 1);
+    doc.text('Status',      colStat, y + 1);
+    y += 7;
+
+    doc.setFont('helvetica','normal'); doc.setFontSize(9);
+    const childMap = getParentMap();
+    EXCEL.resumeOrdered.filter(r => r.kode !== 1).forEach(r => {
+      if (y > H - 25) {
+        doc.addPage(); y = M + 8;
+        doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(70,98,120);
+        doc.setFillColor(241,247,251);
+        doc.rect(M, y - 4, W - 2*M, 8, 'F');
+        doc.text('No', colNo, y + 1);
+        doc.text('Unit Kerja', colUnit, y + 1);
+        doc.text('Progres', colProg, y + 1);
+        doc.text('Kinerja', colSkor, y + 1);
+        doc.text('Status', colStat, y + 1);
+        y += 7;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(40);
+      }
+      const kinerja = calcUnitKinerja(r.kode);
+      const st = statusOf(kinerja);
+      const isParent = (childMap[r.kode] && childMap[r.kode].length > 0);
+      const indent = !r.isParent && (r.parentKode || '') ? 4 : 0;
+      const nama = (r.subUnit || r.biro || ('Unit ' + r.kode));
+      const namaTrim = nama.length > 48 ? nama.substring(0,46) + '…' : nama;
+
+      doc.setTextColor(110);
+      doc.text(String(r.kode), colNo, y);
+      doc.setTextColor(40);
+      doc.setFont('helvetica', r.isParent ? 'bold' : 'normal');
+      doc.text(namaTrim, colUnit + indent, y);
+
+      // Progres
+      doc.setFont('helvetica','normal');
+      if (isParent || !EXCEL.unitData[String(r.kode)]) {
+        doc.setTextColor(160);
+        doc.text('–', colProg, y);
+      } else {
+        const p = calcProgresIsian(r.kode);
+        if (!p) { doc.setTextColor(160); doc.text('–', colProg, y); }
+        else {
+          const c = pdfProgresColor(p.percent);
+          doc.setTextColor(...c);
+          doc.text(`${p.filled}/${p.total} (${p.percent.toFixed(0)}%)`, colProg, y);
+        }
+      }
+
+      // Kinerja
+      doc.setFont('helvetica', r.isParent ? 'bold' : 'normal');
+      doc.setTextColor(40);
+      doc.text(kinerja > 0 ? fmtID(kinerja) : '–', colSkor, y);
+
+      // Status badge — auto-fit width, di-anchor ke kanan halaman
+      if (kinerja > 0) {
+        const sBg = pdfStatusBg(st.label);
+        const sFg = pdfStatusColor(st.label);
+        doc.setFont('helvetica','bold'); doc.setFontSize(8);
+        const txtW = doc.getTextWidth(st.label);
+        const wBadge = Math.max(14, txtW + 4); // min 14mm, +4mm padding
+        const hBadge = 5.5;
+        const xRight = W - M;
+        const xBadge = xRight - wBadge;
+        doc.setFillColor(...sBg);
+        doc.roundedRect(xBadge, y - 4, wBadge, hBadge, 1.2, 1.2, 'F');
+        doc.setTextColor(...sFg);
+        doc.text(st.label, xBadge + wBadge/2, y, {align:'center'});
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(40);
+      } else {
+        doc.setTextColor(160);
+        doc.text('–', W - M, y, {align:'right'});
+        doc.setTextColor(40);
+      }
+
+      y += 6;
+    });
+
+    // ──────────────────────────────────────────────────────────────
+    // HALAMAN 4 dst — DETAIL PER UNIT
+    // ──────────────────────────────────────────────────────────────
+    detailUnits.forEach((u, idx) => {
+      doc.addPage();
+      y = M + 4;
+
+      // Header halaman
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(110);
+      doc.text(`SIMAKER ${tahun} — Detail Unit Kerja`, M, y);
+      const namaShort = u.nama.length > 60 ? u.nama.substring(0,58)+'…' : u.nama;
+      doc.text(namaShort, W - M, y, {align:'right'});
+      y += 2;
+      doc.setDrawColor(180); doc.setLineWidth(0.2); doc.line(M, y, W-M, y); y += 7;
+
+      // Box info unit
+      const kinerja = calcUnitKinerja(u.kode);
+      const st = statusOf(kinerja);
+      const sBg = pdfStatusBg(st.label);
+      const sFg = pdfStatusColor(st.label);
+      doc.setFillColor(248, 251, 253);
+      doc.roundedRect(M, y, W - 2*M, 26, 3, 3, 'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(13,52,95);
+      const namaUnitWrap = doc.splitTextToSize(u.nama, W - 2*M - 60);
+      doc.text(namaUnitWrap[0] || u.nama, M + 4, y + 8);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(70,98,120);
+      doc.text(`Kode Unit: ${u.kode}`, M + 4, y + 14);
+      doc.text(`Progres Isian: ${u.progres.filled}/${u.progres.total} (${u.progres.percent.toFixed(1)}%)`, M + 4, y + 20);
+      const skorKontrib = (u.row && u.row.skorKontribusi) ? fmtID(u.row.skorKontribusi) : '—';
+      doc.text(`Bobot Kontribusi: ${skorKontrib}`, M + 65, y + 20);
+
+      // Skor + status badge kanan
+      doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(...sFg);
+      doc.text(fmtID(kinerja), W - M - 4, y + 11, {align:'right'});
+      doc.setFontSize(9);
+      const wB = 24, hB = 6;
+      doc.setFillColor(...sBg);
+      doc.roundedRect(W - M - 4 - wB, y + 14, wB, hB, 1.5, 1.5, 'F');
+      doc.text(st.label, W - M - 4 - wB/2, y + 18, {align:'center'});
+      y += 32;
+
+      // Tabel IKU
+      // Kolom layout (mm) — total 180mm = W(210) - 2*M(15)
+      const cN  = M;            // No IKU  (18mm)
+      const cIK = M + 18;       // Nama IKU (70mm)
+      const cTg = M + 88;       // Target  (18mm)
+      const cRl = M + 106;      // Realisasi (18mm)
+      const cNi = M + 124;      // Nilai % (16mm)
+      const cBb = M + 140;      // Bobot (14mm)
+      const cSt = M + 154;      // Status (26mm)
+
+      const drawHeader = () => {
+        doc.setFillColor(232, 240, 247);
+        doc.rect(M, y - 4, W - 2*M, 8, 'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(13,52,95);
+        doc.text('No IKU',     cN,  y + 1);
+        doc.text('Nama IKU',   cIK, y + 1);
+        doc.text('Target',     cTg, y + 1, {align:'left'});
+        doc.text('Realisasi',  cRl, y + 1, {align:'left'});
+        doc.text('Nilai (%)',  cNi, y + 1);
+        doc.text('Bobot',      cBb, y + 1);
+        doc.text('Status',     cSt, y + 1);
+        y += 6;
+      };
+      drawHeader();
+
+      const ud = STATE[String(u.kode)] || {};
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40);
+      u.validRows.forEach(row => {
+        // Hitung tinggi baris berdasarkan wrap nama IKU
+        const nameLines = doc.splitTextToSize(String(row.nama || ''), 68);
+        const rowH = Math.max(6, 4 + nameLines.length * 3.5);
+
+        // Page break
+        if (y + rowH > H - 22) {
+          doc.addPage();
+          y = M + 4;
+          doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(110);
+          doc.text(`SIMAKER ${tahun} — Detail Unit Kerja (lanjutan)`, M, y);
+          doc.text(namaShort, W - M, y, {align:'right'});
+          y += 2;
+          doc.setDrawColor(180); doc.setLineWidth(0.2); doc.line(M, y, W-M, y); y += 7;
+          drawHeader();
+          doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40);
+        }
+
+        const rVal = ud[row.noIKU] !== undefined ? ud[row.noIKU] : row.realisasi;
+        const isEmpty = (rVal === null || rVal === undefined || rVal === '');
+        const nilai = !isEmpty ? calcNilai(row.noIKU, rVal, row.target, row.jenisPerhitungan) : 0;
+        const stRow = nilai > 0 ? statusOf(nilai) : { label: '–', cls: '' };
+
+        // (tidak ada background fill — agar baris kosong & terisi tampil seragam)
+
+        doc.setTextColor(110);
+        doc.text(String(row.noIKU || ''), cN, y);
+        doc.setTextColor(40);
+        nameLines.forEach((ln, i) => doc.text(ln, cIK, y + i * 3.5));
+        doc.text(row.target != null ? fmtID(row.target) : '–', cTg, y);
+        if (isEmpty) { doc.setTextColor(160); doc.text('–', cRl, y); doc.setTextColor(40); }
+        else { doc.text(fmtID(Number(rVal)), cRl, y); }
+        doc.text(nilai > 0 ? fmtID(Math.min(nilai, 120)) : '–', cNi, y);
+        doc.text(((row.bobot || 0) * 100).toFixed(2) + '%', cBb, y);
+        if (nilai > 0) {
+          const fg2 = pdfStatusColor(stRow.label);
+          doc.setTextColor(...fg2);
+          doc.setFont('helvetica','bold');
+          doc.text(stRow.label, cSt, y);
+          doc.setFont('helvetica','normal');
+          doc.setTextColor(40);
+        } else {
+          doc.setTextColor(160);
+          doc.text('–', cSt, y);
+          doc.setTextColor(40);
+        }
+
+        y += rowH;
+      });
+    });
+
+    // ──────────────────────────────────────────────────────────────
+    // FOOTER di semua halaman kecuali cover
+    // ──────────────────────────────────────────────────────────────
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let p = 2; p <= totalPages; p++) {
+      doc.setPage(p);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(120);
+      doc.setDrawColor(220); doc.setLineWidth(0.2);
+      doc.line(M, H - 14, W - M, H - 14);
+      doc.text(`SIMAKER Perbanas Institute · ${tahun}`, M, H - 9);
+      doc.text(`Halaman ${p} dari ${totalPages}`, W - M, H - 9, {align:'right'});
+      doc.setFontSize(7); doc.setTextColor(160);
+      doc.text(`Dicetak: ${todayID}`, M, H - 5);
+    }
+
+    doc.save(`Laporan_Kinerja_SIMAKER_${tahun}_${todayStamp}.pdf`);
     showToast('PDF berhasil diunduh.');
-  } catch(e) { console.error(e); showToast('Gagal membuat PDF.'); }
-  btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:15px;height:15px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Unduh PDF';
-  btn.disabled = false;
+  } catch(e) {
+    console.error(e);
+    alert('Gagal membuat PDF: ' + (e && e.message ? e.message : e));
+  }
+  restoreBtn();
 }
 
 // ================================================================
@@ -2926,6 +3420,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2026 is active — reload STATE for 2026
     try { Object.assign(STATE, loadState()); } catch(e) {}
   }
+  applyUnitFilters();
   updateSessionChip();
   updateAdminNav();
   renderYearSwitcher();
@@ -2966,7 +3461,6 @@ function toggleDarkMode() {
   buildDashboardCharts();
   if (document.getElementById('page-perspektif')?.classList.contains('active')) renderPerspektif();
   if (document.getElementById('page-unit')?.classList.contains('active')) loadUnitDetail();
-  if (document.getElementById('page-trend')?.classList.contains('active')) renderTrendChart();
 }
 function initDarkMode() {
   try {
@@ -3021,159 +3515,6 @@ function renderHeatmap() {
     </div>`);
   });
   grid.innerHTML = cells.join('');
-}
-
-// ================================================================
-// TREN BULANAN
-// ================================================================
-const BULAN_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-
-function renderTrendPage() {
-  // Populate unit select
-  const unitSel = document.getElementById('trendUnitSelect');
-  if (unitSel.options.length <= 1) {
-    EXCEL.resumeOrdered.filter(r => EXCEL.unitData[String(r.kode)]).forEach(r => {
-      const opt = document.createElement('option');
-      opt.value = r.kode;
-      opt.textContent = r.kode + ' – ' + (r.subUnit || r.biro);
-      unitSel.appendChild(opt);
-    });
-  }
-  renderTrendChart();
-}
-
-function onTrendUnitChange() {
-  const code = document.getElementById('trendUnitSelect').value;
-  const ikuSel = document.getElementById('trendIKUSelect');
-  ikuSel.innerHTML = '<option value="">— Pilih IKU —</option>';
-  if (!code) return;
-  const rows = (EXCEL.unitData[code] || []).filter(isValidIKU);
-  rows.forEach(r => {
-    const opt = document.createElement('option');
-    opt.value = r.noIKU;
-    opt.textContent = r.noIKU + ' – ' + r.nama.substring(0,50);
-    ikuSel.appendChild(opt);
-  });
-  // Auto-fill trend input
-  renderTrendInput(code);
-  renderTrendChart();
-}
-
-function renderTrendInput(code) {
-  const wrap = document.getElementById('trendInputWrap');
-  const rows = (EXCEL.unitData[code] || []).filter(isValidIKU);
-  if (!rows.length) { wrap.innerHTML = '<div style="color:var(--muted);font-size:13px">Tidak ada IKU untuk unit ini.</div>'; return; }
-  
-  const trendKey = 'simaker_trend_' + ACTIVE_YEAR + '_' + code;
-  let trendData = {};
-  try { trendData = JSON.parse(localStorage.getItem(trendKey) || '{}'); } catch(e) {}
-  
-  let html = `<div style="overflow-x:auto"><table class="tbl"><thead><tr>
-    <th>IKU</th>${BULAN_SHORT.map((b,i)=>`<th class="c" style="min-width:70px">${b}</th>`).join('')}
-    <th class="c">Target</th></tr></thead><tbody>`;
-  
-  rows.slice(0,8).forEach(r => {
-    html += `<tr><td style="font-size:11px;font-weight:600;color:var(--muted);max-width:200px">${r.noIKU}<br><span style="font-size:12px;color:var(--ink)">${r.nama.substring(0,40)}</span></td>`;
-    for (let m = 1; m <= 12; m++) {
-      const val = (trendData[r.noIKU] || {})[m] || '';
-      html += `<td><input type="text" inputmode="decimal" 
-        style="width:64px;padding:5px 6px;font-size:12px;border:1px solid var(--line-strong);border-radius:8px;text-align:right;background:var(--paper);color:var(--ink)"
-        data-code="${code}" data-noiku="${r.noIKU}" data-month="${m}" data-trendkey="${trendKey}"
-        value="${val}" onchange="saveTrendInput(this)" placeholder="–"></td>`;
-    }
-    html += `<td class="r" style="font-size:12px;color:var(--muted)">${fmtNum(r.target)}</td></tr>`;
-  });
-  html += '</tbody></table></div>';
-  if (rows.length > 8) html += `<div style="font-size:12px;color:var(--muted);margin-top:8px">Menampilkan 8 IKU pertama dari ${rows.length} total.</div>`;
-  wrap.innerHTML = html;
-}
-
-function saveTrendInput(inp) {
-  const key = inp.dataset.trendkey;
-  const noIKU = inp.dataset.noiku;
-  const month = parseInt(inp.dataset.month);
-  const val = parseFloat(inp.value.replace(',','.')) || 0;
-  let data = {};
-  try { data = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
-  if (!data[noIKU]) data[noIKU] = {};
-  data[noIKU][month] = val;
-  try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
-  renderTrendChart();
-}
-
-function renderTrendChart() {
-  const code = document.getElementById('trendUnitSelect')?.value;
-  const noIKU = document.getElementById('trendIKUSelect')?.value;
-  const empty = document.getElementById('trendEmpty');
-  const wrap = document.getElementById('trendChartWrap');
-  
-  if (!code) { if(empty) empty.style.display=''; if(wrap) wrap.style.display='none'; return; }
-  // Update IKU select if needed
-  const ikuSel = document.getElementById('trendIKUSelect');
-  if (ikuSel && ikuSel.options.length <= 1) { onTrendUnitChange(); return; }
-  
-  if (!noIKU) { if(empty) empty.style.display=''; if(wrap) wrap.style.display='none'; return; }
-  if(empty) empty.style.display='none'; if(wrap) wrap.style.display='';
-  
-  const row = (EXCEL.unitData[code] || []).find(r => r.noIKU === noIKU);
-  if (!row) return;
-  
-  const trendKey = 'simaker_trend_' + ACTIVE_YEAR + '_' + code;
-  let trendData = {};
-  try { trendData = JSON.parse(localStorage.getItem(trendKey) || '{}'); } catch(e) {}
-  const monthly = trendData[noIKU] || {};
-  
-  // Build monthly target (pro-rate for Kumulatif)
-  const labels = BULAN_SHORT;
-  const targetArr = labels.map((_, i) => {
-    const m = i + 1;
-    return row.jenisPerhitungan === 'Kumulatif' ? row.target * (m / 12) : row.target;
-  });
-  const realisasiArr = labels.map((_, i) => monthly[i+1] || null);
-  
-  // Calc nilai per month
-  const nilaiArr = realisasiArr.map((r, i) => {
-    if (r === null) return null;
-    return calcNilai(noIKU, r, row.target * ((i+1)/12), row.jenisPerhitungan);
-  });
-  
-  if (charts['chartTrend']) charts['chartTrend'].destroy();
-  const ctx = document.getElementById('chartTrend');
-  if (!ctx) return;
-  
-  const isDark = document.body.classList.contains('dark-mode');
-  const gridColor = isDark ? 'rgba(255,255,255,.06)' : 'rgba(13,77,139,.08)';
-  const tickColor = isDark ? '#708090' : '#6f8597';
-  
-  charts['chartTrend'] = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Target', data: targetArr, borderColor: '#d4a54a', borderDash: [5,4], borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
-        { label: 'Realisasi', data: realisasiArr, borderColor: '#0d4d8b', backgroundColor: 'rgba(13,77,139,.1)', borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#00a47b', fill: true, tension: 0.3, spanGaps: true }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: true, position: 'top', labels: { color: tickColor, font: { size: 12 } } } },
-      scales: {
-        x: { ticks: { color: tickColor, font: { size: 11 } }, grid: { color: gridColor } },
-        y: { beginAtZero: true, ticks: { color: tickColor }, grid: { color: gridColor } }
-      }
-    }
-  });
-  
-  // Summary
-  const filled = realisasiArr.filter(v => v !== null).length;
-  const lastReal = realisasiArr.filter(v => v !== null).pop();
-  const lastNilai = nilaiArr.filter(v => v !== null).pop();
-  const summEl = document.getElementById('trendSummary');
-  if (summEl) summEl.innerHTML = `<strong>${row.nama.substring(0,60)}</strong> &nbsp;·&nbsp; 
-    Target: ${fmtNum(row.target)} &nbsp;·&nbsp; 
-    Data terisi: ${filled}/12 bulan &nbsp;·&nbsp; 
-    Realisasi terakhir: <b>${lastReal !== undefined ? fmtNum(lastReal) : '–'}</b> &nbsp;·&nbsp; 
-    Nilai: <b>${lastNilai !== undefined ? fmtID(lastNilai) : '–'}</b>`;
 }
 
 // ================================================================
